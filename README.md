@@ -38,3 +38,11 @@ sudo apt-get upgrade
 ```
 apt-get -y install nginx && apt-get -y install ipset && apt-get -y install iptables
 ```
+
+## systemのファイルをコピー
+'''
+systemctl enable nginx-reboot.timer
+systemctl start nginx-reboot.timer
+systemctl enable nginx-start.service
+systemctl start nginx-start.service
+'''
