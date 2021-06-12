@@ -1,5 +1,12 @@
 # nginx settings
 
+ipを日本からに限定したnginx + iptables + ipset　の設定方法です。
+
+/etc/nginx/
+/etc/systemd/system/
+/etc/ipset/
+上の3つのフォルダにそれぞれを導入してください
+
 ## Create User
 
 ```
