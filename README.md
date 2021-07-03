@@ -46,3 +46,13 @@ systemctl start nginx-reboot.timer
 systemctl enable nginx-start.service
 systemctl start nginx-start.service
 ```
+# 鯖さんに説明
+
+簡単にできるように　
+1. ufwの設定 port開放するソフト
+2. nginxの設定 パケットを自鯖に流す
+3. mydnsの設定　ドメインを登録する
+
+## もし自鯖のルータが初期化されたとき
+
+-> nginx の再起動だけすればよい (Linodeの再起動でもOK)
