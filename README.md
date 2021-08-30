@@ -44,6 +44,7 @@ git clone
 cp nginx/* /etc/nginx
 cp system/* /etc/systemd/system
 cp -r ipset /etc
+chmod 755 /etc/ipset/iptables.sh
 ```
 
 ## systemのファイルをコピーした後
