@@ -9,6 +9,7 @@ ipを日本からに限定したnginx + iptables + ipset　の設定方法です
 /etc/ipset/
 
 上の3つのフォルダにそれぞれを導入してください
+ssh は　27のポートで開けることによって通るが、linodeにログインしてconsole を立ち上げれば完全に安全。
 
 ## Create User
 
