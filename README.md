@@ -38,6 +38,13 @@ sudo apt-get upgrade
 ```
 apt-get -y install nginx && apt-get -y install ipset && apt-get -y install iptables
 ```
+## ファイルのコピー
+```
+git clone 
+cp nginx/* /etc/nginx
+cp system/* /etc/systemd/system
+cp -r ipset /etc
+```
 
 ## systemのファイルをコピーした後
 ```
