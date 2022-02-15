@@ -1,9 +1,0 @@
-[Unit]
-Description=nginx reboot timer
-
-[Timer]
-OnCalendar=*-*-* 6:00
-Unit=nginx-reboot.service
-
-[Install]
-WantedBy=timers.target
