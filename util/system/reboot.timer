@@ -1,0 +1,9 @@
+[Unit]
+Description=minecraft reboot timer
+
+[Timer]
+OnCalendar=*-*-* 6:00
+Unit=reboot.service
+
+[Install]
+WantedBy=timers.target

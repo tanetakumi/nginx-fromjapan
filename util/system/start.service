@@ -1,0 +1,45 @@
+[Unit]
+# Description : このユニットの説明。systemctl status の時に表示される
+Description=nginx auto start service
+# Documentation : このユニットについてのドキュメントのURI
+# After : このユニットの後に起動するユニット1
+#After=network.target
+# Before : このユニットの前に起動するユニット1
+# Requires : このユニットが依存するユニット。前のユニットの起動が失敗したら起>動 しない1
+# Wants : このユニットが依存するユニット。前のユニットの起動が失敗しても起動する1
+# Conflicts : 指定したユニットと一緒に起動しない
+
+
+
+#[Service]=================================================
+[Service]
+# スクリプト実行時のユーザ
+User=root
+
+#ExecStart : 起動時に実行するコマンド
+#ExecStop : 停止時に実行するコマンド
+#ExecReload : リロード時に実行するコマンド
+ExecStart=/etc/ipset/iptables.sh
+# Timeout
+TimeoutStartSec = 180
+#Restart : プロセスが停止したとき、プロセス再起動の条件。各条件は以下の4つ
+#       always … 常に再起動する
+#       no … 再起動しない
+#       on-success … 終了コードが0で再起動する
+#       on-failure … 終了コードが0以外で再起動する
+#RestartSec : 再起動するまでの待ち時間（秒）
+Restart = no
+#RestartSec = 5
+
+#Type
+#       simple … デフォルト。プロセスが起動した時点で起動完了
+#       forking … フォークして親プロセスが終了した時点で起動完了
+#       oneshot … simple と似ているが、次のユニットを実行する前に自身のプロセスを終了する
+#       dbus … D-Bus を使うプロセスで、D-Bus の接続名を見つけると起動完了
+#       notify … simple と似ているが、sd_notify() 関数で起動完了のメッセージ>を 受け取ったときに起
+Type=simple
+
+#[Install]=================================================
+[Install]
+# WantedBy=timers.target
+WantedBy = multi-user.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=mydns notice service
+
+[Timer]
+OnCalendar=*-*-* 4:00:00
+Unit=mydns.service
+
+[Install]
+WantedBy=timers.target
