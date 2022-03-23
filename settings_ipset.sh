@@ -21,6 +21,10 @@ if [ -z "${IPADD}" ]; then
     exit 1
 fi
 
+timedatectl set-timezone Asia/Tokyo
+echo "タイムゾーンを日本に変更"
+
+
 # nginx が入っているか
 if !(dpkg -s "nginx" > /dev/null 2>&1); then
     echo -e "\033[31mnginx is not installed.\033[m"
@@ -52,7 +56,8 @@ sed -e "s|<user>|root|g" -e "s|<cmd>|${MYDNS_CMD}|g" ${HOME}/util/system/mydns.s
 
 # mydnsのtimerをコピーして有効化
 cp util/system/mydns.timer $SYSTEM_DIR
-sudo systemctl enable mydns.timer
+systemctl enable mydns.timer
+systemctl start mydns.timer
 
 echo "mydnsの通知サービスの有効化"
 
@@ -60,6 +65,9 @@ echo "mydnsの通知サービスの有効化"
 # 起動時のserviceの作成とコピー
 IPTABLE_CMD="${HOME}/iptables.sh"
 sed -e "s|<user>|root|g" -e "s|<cmd>|${IPTABLE_CMD}|g" ${HOME}/util/system/start.service > $SYSTEM_DIR/start.service
+
+systemctl enable start.service
+systemctl start start.service
 
 echo "起動サービスの有効化"
 
@@ -69,7 +77,8 @@ sed -e "s|<user>|root|g" ${HOME}/util/system/reboot.service > $SYSTEM_DIR/reboot
 
 # mydnsのtimerをコピーして有効化
 cp util/system/reboot.timer $SYSTEM_DIR
-sudo systemctl enable reboot.timer
+systemctl enable reboot.timer
+systemctl start reboot.timer
 
 echo "再起動サービスの有効化"
 
