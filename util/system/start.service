@@ -1,6 +1,6 @@
 [Unit]
 # Description : このユニットの説明。systemctl status の時に表示される
-Description=nginx auto start service
+Description=auto start service
 # Documentation : このユニットについてのドキュメントのURI
 # After : このユニットの後に起動するユニット1
 #After=network.target
@@ -14,12 +14,12 @@ Description=nginx auto start service
 #[Service]=================================================
 [Service]
 # スクリプト実行時のユーザ
-User=root
+User=<user>
 
 #ExecStart : 起動時に実行するコマンド
 #ExecStop : 停止時に実行するコマンド
 #ExecReload : リロード時に実行するコマンド
-ExecStart=/etc/ipset/iptables.sh
+ExecStart=<cmd>
 # Timeout
 TimeoutStartSec = 180
 #Restart : プロセスが停止したとき、プロセス再起動の条件。各条件は以下の4つ

@@ -1,6 +1,21 @@
 #! /bin/bash
 
+# スクリプトを置いた場所
+HOME=$(cd $(dirname $0);pwd)
 
+# MyDNS account + Discord webhook
+source $HOME/.env
+
+# ディスコードに通知関数
+function discordNotify(){
+    # 書き方が json なので {"key":"value"} にしないといけない
+    head='{"username":"Hane","content":"'
+    back='"}'
+    message=${head}${1}${back}
+    echo $message
+    curl -H "Accept: application/json" -H "Content-type: application/json" \
+    -X POST -d $message $DISCORD_WEBHOOK
+}
 
 # -j (--jump) ターゲット             条件に合った際のアクションを指定
 # -p (--protocol) プロトコル名   プロトコル名(tcp, udp, icmp, all)を指定
@@ -11,24 +26,6 @@
 # -i (--in-interface) デバイス   パケット入力のインターフェースを指定
 # -o (--out-interface) デバイス  パケットを出力するインターフェースを指定
 # -m (--match) モジュール       特定の通信を検査する拡張モジュールを指定
-
-# MyDNSの通知をするか？
-mydns_notify=true
-
-# ユーザー名
-MYDNS_USERNAME=<username>
-MYDNS_PASSWORD=<pass>
-
-DISCORD_WEBHOOK=<webhook>
-# ディスコードに通知関数
-function discordNotify(){
-    # 書き方が json なので {"key":"value"} にしないといけない
-    head='{"username":"Hane","content":"'
-    back='"}'
-    message=${head}${1}${back}
-    curl -H "Accept: application/json" -H "Content-type: application/json" \
-    -X POST -d $message $DISCORD_WEBHOOK
-}
 
 # 設定をクリア
 iptables -F
@@ -97,19 +94,15 @@ ipset destroy
 # WHITELIST 作成
 ipset create -exist WHITELIST hash:net
 
-# ダウンロードフォルダー
-DOWNLOAD_FOLDER=/etc/ipset/download
-# なければ作成
-mkdir -p $DOWNLOAD_FOLDER
 # ダウンロード
-if curl -o $DOWNLOAD_FOLDER/jp.txt -fsSL https://ipv4.fetus.jp/jp.txt; then
+if curl -o $HOME/jp.txt -fsSL https://ipv4.fetus.jp/jp.txt; then
     discordNotify ipfetusSccess"\n"
 else
     discordNotify ipfetusError"\n"
 fi
 # ダウンロードした jp.txt を jp.conf に出力(空白行とコメントアウト行を削除)
 # grep -v -e '^\s*#' -e '^\s*$' $DOWNLOAD/jp.txt > $DOWNLOAD/jp.conf
-grep -v -e '^\s*#' -e '^\s*$' $DOWNLOAD_FOLDER/jp.txt | while read line
+grep -v -e '^\s*#' -e '^\s*$' $HOME/jp.txt | while read line
 do
     ipset add WHITELIST $line
 done
@@ -123,17 +116,7 @@ iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25565 -m set --matc
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25566 -m set --match-set WHITELIST src -j ACCEPT
 ## 19132 を日本からに制限
 iptables -A INPUT -m state --state NEW -m udp -p udp --dport 19132 -m set --match-set WHITELIST src -j ACCEPT
-# 27は公開鍵だからOK
-iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27 -j ACCEPT
+# 27も日本からに制限
+iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27 -m set --match-set WHITELIST src -j ACCEPT
 
-# MyDNSへの通知
-if $mydns_notify ; then
-    # まずはmydnsに通知をする。(testサーバーでやるとまずい)
-    if curl -s -u ${MYDNS_USERNAME}:${MYDNS_PASSWORD} https://ipv4.mydns.jp/login.html ;then
-        MESSAGE+="MydnsNotifySuccess"
-        echo "mydns の通知成功"
-    else
-        MESSAGE+="\nMydns\bNotify\bError"
-        echo "mydns の通知エラー"
-    fi
-fi
+

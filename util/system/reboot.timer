@@ -1,8 +1,8 @@
 [Unit]
-Description=minecraft reboot timer
+Description=reboot timer
 
 [Timer]
-OnCalendar=*-*-* 6:00
+OnCalendar=*-*-* 5:00
 Unit=reboot.service
 
 [Install]
