@@ -2,30 +2,19 @@
 
 ipを日本からに限定したnginx + iptables + ipset　の設定方法です。
 
-/etc/nginx/
-
-/etc/systemd/system/
-
-/etc/ipset/
-
-上の3つのフォルダにそれぞれを導入してください
-ssh は　27のポートで開けることによって通るが、linodeにログインしてconsole を立ち上げれば完全に安全。
-
 ## Create User
 
 ```
-useradd -m minecraft
-passwd minecraft
+adduser minecraft
 ```
 
 ## Change Login Shell
-
-```
-usermod -s /bin/bash minecraft
-```
 現状確認
 ```
 grep minecraft /etc/passwd
+```
+```
+usermod -s /bin/bash minecraft
 ```
 
 ## Update Upgrade
