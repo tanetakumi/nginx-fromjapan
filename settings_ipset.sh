@@ -42,9 +42,9 @@ else
 fi
 
 # nginx の設定
-
-sed -e "s|<server_ip>|${IPADD}|g" ${HOME}/util/nginx-config/nginx.conf > /etc/nginx/nginx.conf
-systemctl restart nginx
+IP=`dig ${IPADD} +short`
+sed -e "s|<server_ip>|${IP}|g" ${HOME}/util/nginx-config/nginx.conf > /etc/nginx/nginx.conf
+service nginx restart
 
 
 # --------
@@ -79,15 +79,12 @@ sed -e "s|<user>|root|g" -e "s|<cmd>|${IPTABLE_CMD}|g" ${HOME}/util/system/start
 
 # 有効化
 systemctl enable start.service
-systemctl start start.service
 
 echo "起動サービスの有効化"
 
 
 # 全デーモンのリロード
 sudo systemctl daemon-reload
-
-
 
 
 # ssh のport の上書き

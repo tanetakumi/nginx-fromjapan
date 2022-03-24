@@ -46,12 +46,7 @@ iptables -A INPUT -i lo -j ACCEPT
 # すでに確立した通信(established)および関連したパケット(related)を許可する
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# 25565の通信を許可する。
-# iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25565 -j ACCEPT
-# 19132の通信を許可する。
-# iptables -A INPUT -m state --state NEW -m udp -p udp --dport 19132 -j ACCEPT
-# SSHを許可 (OpenSSHでポート変更済み 27)
-# iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27 -j ACCEPT
+
 
 # ping(icmp) echo許可
 iptables -A INPUT -p icmp --icmp-type 0 -j ACCEPT
@@ -76,12 +71,12 @@ iptables -A INPUT -p tcp --tcp-flags ALL ALL -j DROP
 
 
 # Ping攻撃対策
-iptables -N PING_ATTACK
-iptables -A PING_ATTACK -m length --length :85 -j ACCEPT
-iptables -A PING_ATTACK -j DROP
-iptables -A INPUT -p icmp --icmp-type 8 -j PING_ATTACK
+#iptables -N PING_ATTACK
+#iptables -A PING_ATTACK -m length --length :85 -j ACCEPT
+#iptables -A PING_ATTACK -j DROP
+#iptables -A INPUT -p icmp --icmp-type 8 -j PING_ATTACK
 # Ping攻撃対策 + Ping Flood攻撃対策
-iptables -A PING_ATTACK -p icmp --icmp-type 8 -m length --length :85 -m limit --limit 1/s --limit-burst 4 -j ACCEPT
+#iptables -A PING_ATTACK -p icmp --icmp-type 8 -m length --length :85 -m limit --limit 1/s --limit-burst 4 -j ACCEPT
 
 
 # Smurf攻撃対策+不要ログ破棄
@@ -108,15 +103,20 @@ do
 done
 
 # ipset は -m set --match-set で使用可能
-# 25564 を日本からに制限
-iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25564 -m set --match-set WHITELIST src -j ACCEPT
 # 25565 を日本からに制限
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25565 -m set --match-set WHITELIST src -j ACCEPT
-# 25566 を日本からに制限
-iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25566 -m set --match-set WHITELIST src -j ACCEPT
-## 19132 を日本からに制限
+# 19132 を日本からに制限
 iptables -A INPUT -m state --state NEW -m udp -p udp --dport 19132 -m set --match-set WHITELIST src -j ACCEPT
 # 27も日本からに制限
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27 -m set --match-set WHITELIST src -j ACCEPT
 
+# 25569 を日本からに制限
+iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25569 -m set --match-set WHITELIST src -j ACCEPT
+# 19140 を日本からに制限
+iptables -A INPUT -m state --state NEW -m udp -p udp --dport 19140 -m set --match-set WHITELIST src -j ACCEPT
 
+
+# nginx の設定
+IP=`dig ${IPADD} +short`
+sed -e "s|<server_ip>|${IP}|g" ${HOME}/util/nginx-config/nginx.conf > /etc/nginx/nginx.conf
+service nginx restart
