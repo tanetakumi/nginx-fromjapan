@@ -3,6 +3,7 @@
 # スクリプトを置いた場所
 HOME=$(cd $(dirname $0);pwd)
 
+# 環境変数の読み込み
 # MyDNS account + Discord webhook + ip
 source $HOME/.env
 
@@ -47,7 +48,9 @@ sed -e "s|<server_ip>|${IP}|g" ${HOME}/util/nginx-config/nginx.conf > /etc/nginx
 service nginx restart
 
 
-# --------
+# +------------------+
+# | mydns settings   |
+# +------------------+
 # mydns.service  mydns.timer
 MYDNS_CMD="${HOME}/mydns.sh"
 sed -e "s|<user>|root|g" -e "s|<cmd>|${MYDNS_CMD}|g" ${HOME}/util/system/mydns.service > $SYSTEM_DIR/mydns.service

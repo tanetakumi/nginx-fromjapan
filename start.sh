@@ -3,6 +3,7 @@
 # スクリプトを置いた場所
 HOME=$(cd $(dirname $0);pwd)
 
+# 環境変数の読み込み
 # MyDNS account + Discord webhook
 source $HOME/.env
 
@@ -17,6 +18,9 @@ function discordNotify(){
     -X POST -d $message $DISCORD_WEBHOOK
 }
 
+# +-----------------------+
+# |   iptables settings   |
+# +-----------------------+
 # -j (--jump) ターゲット             条件に合った際のアクションを指定
 # -p (--protocol) プロトコル名   プロトコル名(tcp, udp, icmp, all)を指定
 # -s (--source) IPアドレス           送信元アドレス(IPアドレスかホスト名)を指定
@@ -91,9 +95,9 @@ ipset create -exist WHITELIST hash:net
 
 # ダウンロード
 if curl -o $HOME/jp.txt -fsSL https://ipv4.fetus.jp/jp.txt; then
-    discordNotify ipfetusSccess"\n"
+    discordNotify "Succeeded_to_get_Japanese_ipaddress_from_ipv4.fetus.jp\n"
 else
-    discordNotify ipfetusError"\n"
+    discordNotify "[ERROR]Failed_to_get_Japanese_ipaddress_from_ipv4.fetus.jp\n"
 fi
 # ダウンロードした jp.txt を jp.conf に出力(空白行とコメントアウト行を削除)
 # grep -v -e '^\s*#' -e '^\s*$' $DOWNLOAD/jp.txt > $DOWNLOAD/jp.conf
@@ -115,7 +119,9 @@ iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25569 -m set --matc
 # 19140 を日本からに制限
 iptables -A INPUT -m state --state NEW -m udp -p udp --dport 19140 -m set --match-set WHITELIST src -j ACCEPT
 
-
+# +-----------------------+
+# |    nginx settings     |
+# +-----------------------+
 # nginx の設定
 IP=`dig ${IPADD} +short`
 sed -e "s|<server_ip>|${IP}|g" ${HOME}/util/nginx-config/nginx.conf > /etc/nginx/nginx.conf

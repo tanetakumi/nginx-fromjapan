@@ -19,9 +19,9 @@ function discordNotify(){
 
 # まずはmydnsに通知をする。(testサーバーでやるとまずい)
 if curl -s -u ${MYDNS_USERNAME}:${MYDNS_PASSWORD} https://ipv4.mydns.jp/login.html ;then
-    discordNotify "NotificationSuccess."
+    discordNotify "Succeeded_to_notify_ipaddress_to_MyDNS"
     echo "mydns の通知成功"
 else 
-    discordNotify "NotificationFail."
+    discordNotify "[ERROR]Failed_to_notify_ipaddress_to_MyDNS"
     echo "mydns の通知エラー"
 fi
