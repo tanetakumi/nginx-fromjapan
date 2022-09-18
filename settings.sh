@@ -77,8 +77,8 @@ echo "再起動サービスの有効化"
 
 # --------
 # start.service
-IPTABLE_CMD="${HOME}/iptables.sh"
-sed -e "s|<user>|root|g" -e "s|<cmd>|${IPTABLE_CMD}|g" ${HOME}/util/system/start.service > $SYSTEM_DIR/start.service
+START_CMD="${HOME}/start.sh"
+sed -e "s|<user>|root|g" -e "s|<cmd>|${START_CMD}|g" ${HOME}/util/system/start.service > $SYSTEM_DIR/start.service
 
 # 有効化
 systemctl enable start.service
