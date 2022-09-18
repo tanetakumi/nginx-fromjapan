@@ -107,13 +107,16 @@ do
 done
 
 # ipset は -m set --match-set で使用可能
+# 27も日本からに制限
+iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27 -m set --match-set WHITELIST src -j ACCEPT
+
+# ----- Server1  JAVA + BE -----
 # 25565 を日本からに制限
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25565 -m set --match-set WHITELIST src -j ACCEPT
 # 19132 を日本からに制限
 iptables -A INPUT -m state --state NEW -m udp -p udp --dport 19132 -m set --match-set WHITELIST src -j ACCEPT
-# 27も日本からに制限
-iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27 -m set --match-set WHITELIST src -j ACCEPT
 
+# ----- Server2  JAVA + BE -----
 # 25569 を日本からに制限
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25569 -m set --match-set WHITELIST src -j ACCEPT
 # 19140 を日本からに制限
