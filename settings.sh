@@ -95,4 +95,4 @@ sed -i -e "s/#\?\s*Port\s*[0-9]\+/Port 27/" /etc/ssh/sshd_config
 systemctl restart sshd
 echo "ssh Port 27に設定しました"
 
-$HOME/iptables.sh
+$HOME/start.sh
