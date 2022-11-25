@@ -7,16 +7,17 @@ HOME=$(cd $(dirname $0);pwd)
 # MyDNS account + Discord webhook
 source $HOME/.env
 
-# ディスコードに通知関数
+# root ユーザでの実行をしてもらう
+if [ "`whoami`" != "root" ]; then
+  echo "Permission denied"
+  exit 1
+fi
+
+# ディスコード通知関数
 function discordNotify(){
-    # 書き方が json なので {"key":"value"} にしないといけない
-    head='{"username":"Hane","content":"'
-    back='"}'
-    message=${head}${1}${back}
-    echo $message
-    curl -H "Accept: application/json" -H "Content-type: application/json" \
-    -X POST -d $message $DISCORD_WEBHOOK
+    curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"username\":\"HaneBot\",\"content\":\"${1}\"}" $DISCORD_WEBHOOK
 }
+
 
 # +-----------------------+
 # |   iptables settings   |

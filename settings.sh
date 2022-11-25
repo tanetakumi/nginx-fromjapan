@@ -63,7 +63,9 @@ systemctl start mydns.timer
 echo "mydnsの通知サービスの有効化"
 
 
-# --------
+# +------------------+
+# | reboot settings  |
+# +------------------+
 # reboot.service  reboot.timer
 sed -e "s|<user>|root|g" -e "s|<cmd>|reboot|g" ${HOME}/util/system/reboot.service > $SYSTEM_DIR/reboot.service
 cp util/system/reboot.timer $SYSTEM_DIR
@@ -75,7 +77,9 @@ systemctl start reboot.timer
 echo "再起動サービスの有効化"
 
 
-# --------
+# +------------------+
+# | start settings   |
+# +------------------+
 # start.service
 START_CMD="${HOME}/start.sh"
 sed -e "s|<user>|root|g" -e "s|<cmd>|${START_CMD}|g" ${HOME}/util/system/start.service > $SYSTEM_DIR/start.service
@@ -94,7 +98,6 @@ sudo systemctl daemon-reload
 sed -i -e "s/#\?\s*Port\s*[0-9]\+/Port 27/" /etc/ssh/sshd_config
 systemctl restart sshd
 echo "ssh Port 27に設定しました"
-
 
 
 # start.sh の起動
