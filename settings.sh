@@ -4,7 +4,6 @@
 HOME=$(cd $(dirname $0);pwd)
 
 # 環境変数の読み込み
-# MyDNS account + Discord webhook + ip
 source $HOME/.env
 
 # SYSTEM directory
@@ -17,7 +16,7 @@ if [ "`whoami`" != "root" ]; then
 fi
 
 # 値が入ってるときは　-n "${変数}"　= true
-if [ -z "${IPADD}" ]; then
+if [ -z "${DOMAIN}" ]; then
     echo ".env が設定されていません。" 2>&1
     exit 1
 fi
@@ -42,8 +41,10 @@ else
     echo -e "\033[32mipset is installed.\033[m"
 fi
 
-# nginx の設定
-IP=`dig ${IPADD} +short`
+# +------------------+
+# | nginx settings   |
+# +------------------+
+IP=`dig ${DOMAIN} +short`
 sed -e "s|<server_ip>|${IP}|g" ${HOME}/util/nginx-config/nginx.conf > /etc/nginx/nginx.conf
 service nginx restart
 

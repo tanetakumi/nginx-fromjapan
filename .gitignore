@@ -1,3 +1,5 @@
 test/
 .env
 jp.txt
+
+!util/.env
