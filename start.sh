@@ -83,7 +83,6 @@ iptables -A INPUT -p tcp --tcp-flags ALL ALL -j DROP
 # Ping攻撃対策 + Ping Flood攻撃対策
 #iptables -A PING_ATTACK -p icmp --icmp-type 8 -m length --length :85 -m limit --limit 1/s --limit-burst 4 -j ACCEPT
 
-
 # Smurf攻撃対策+不要ログ破棄
 iptables -A INPUT -d 255.255.255.255 -j DROP
 iptables -A INPUT -d 224.0.0.1 -j DROP
@@ -96,9 +95,9 @@ ipset create -exist WHITELIST hash:net
 
 # ダウンロード
 if curl -o $HOME/jp.txt -fsSL https://ipv4.fetus.jp/jp.txt; then
-    discordNotify "Succeeded to get Japanese ipaddress from ipv4.fetus.jp\n"
+    discordNotify "Succeeded to get Japanese ipaddresses from ipv4.fetus.jp\n"
 else
-    discordNotify "[ERROR]Failed to get Japanese ipaddress from ipv4.fetus.jp\n"
+    discordNotify "[ERROR]Failed to get Japanese ip addresses from ipv4.fetus.jp\n"
 fi
 # ダウンロードした jp.txt を jp.conf に出力(空白行とコメントアウト行を削除)
 # grep -v -e '^\s*#' -e '^\s*$' $DOWNLOAD/jp.txt > $DOWNLOAD/jp.conf
