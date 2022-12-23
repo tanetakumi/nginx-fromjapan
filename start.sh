@@ -96,9 +96,9 @@ ipset create -exist WHITELIST hash:net
 
 # ダウンロード
 if curl -o $HOME/jp.txt -fsSL https://ipv4.fetus.jp/jp.txt; then
-    discordNotify "Succeeded_to_get_Japanese_ipaddress_from_ipv4.fetus.jp\n"
+    discordNotify "Succeeded to get Japanese ipaddress from ipv4.fetus.jp\n"
 else
-    discordNotify "[ERROR]Failed_to_get_Japanese_ipaddress_from_ipv4.fetus.jp\n"
+    discordNotify "[ERROR]Failed to get Japanese ipaddress from ipv4.fetus.jp\n"
 fi
 # ダウンロードした jp.txt を jp.conf に出力(空白行とコメントアウト行を削除)
 # grep -v -e '^\s*#' -e '^\s*$' $DOWNLOAD/jp.txt > $DOWNLOAD/jp.conf
