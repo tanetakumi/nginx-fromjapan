@@ -15,7 +15,7 @@ fi
 
 # ディスコード通知関数
 function discordNotify(){
-    curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"username\":\"HaneBot\",\"content\":\"${1}\"}" $DISCORD_WEBHOOK
+    curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"username\":\"Proxy\",\"content\":\"${1}\"}" $DISCORD_WEBHOOK
 }
 
 
@@ -95,9 +95,9 @@ ipset create -exist WHITELIST hash:net
 
 # ダウンロード
 if curl -o $HOME/jp.txt -fsSL https://ipv4.fetus.jp/jp.txt; then
-    discordNotify "Succeeded to get Japanese ipaddresses from ipv4.fetus.jp\n"
+    discordNotify "`date +"%H:%M:%S"` Succeeded to get Japanese ipaddresses from ipv4.fetus.jp\n"
 else
-    discordNotify "[ERROR]Failed to get Japanese ip addresses from ipv4.fetus.jp\n"
+    discordNotify "`date +"%H:%M:%S"` [ERROR]Failed to get Japanese ip addresses from ipv4.fetus.jp\n"
 fi
 # ダウンロードした jp.txt を jp.conf に出力(空白行とコメントアウト行を削除)
 # grep -v -e '^\s*#' -e '^\s*$' $DOWNLOAD/jp.txt > $DOWNLOAD/jp.conf
