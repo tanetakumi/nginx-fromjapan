@@ -13,9 +13,16 @@ if [ "`whoami`" != "root" ]; then
   exit 1
 fi
 
-# ディスコード通知関数
-function discordNotify(){
-    curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"username\":\"Proxy\",\"content\":\"${1}\"}" $DISCORD_WEBHOOK
+# ディスコード関数
+# args.1    : Message
+# args.2    : File path (if you want to send the file)
+# args.last : URL
+function discord(){
+    if [ $# -eq 2 ]; then
+        curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "{\"username\":\"Proxy\",\"content\":\"${1}\"}" "${2}"
+    elif [ $# -eq 3 ]; then
+        curl -H "Accept: application/json" -H "Content-Type: multipart/form-data" -X POST -F "payload_json={\"username\":\"Proxy\",\"content\":\"${1}\"}" -F "file1=@${2}" "${3}"
+    fi
 }
 
 
@@ -95,9 +102,9 @@ ipset create -exist WHITELIST hash:net
 
 # ダウンロード
 if curl -o $HOME/jp.txt -fsSL https://ipv4.fetus.jp/jp.txt; then
-    discordNotify "`date +"%H:%M:%S"` Succeeded to get Japanese ipaddresses from ipv4.fetus.jp\n"
+    discord "`date +%H:%M:%S` Succeeded to get Japanese ipaddresses from ipv4.fetus.jp\n" $DISCORD_WEBHOOK
 else
-    discordNotify "`date +"%H:%M:%S"` [ERROR]Failed to get Japanese ip addresses from ipv4.fetus.jp\n"
+    discord "`date +%H:%M:%S` [ERROR]Failed to get Japanese ip addresses from ipv4.fetus.jp\n" $DISCORD_WEBHOOK
 fi
 # ダウンロードした jp.txt を jp.conf に出力(空白行とコメントアウト行を削除)
 # grep -v -e '^\s*#' -e '^\s*$' $DOWNLOAD/jp.txt > $DOWNLOAD/jp.conf
@@ -113,14 +120,14 @@ iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 27 -m set --match-s
 # ----- Server1  JAVA + BE -----
 # 25565 を日本からに制限
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25565 -m set --match-set WHITELIST src -j ACCEPT
-# 19132 を日本からに制限
-iptables -A INPUT -m state --state NEW -m udp -p udp --dport 19132 -m set --match-set WHITELIST src -j ACCEPT
+# # 19132 を日本からに制限
+# iptables -A INPUT -m state --state NEW -m udp -p udp --dport 19132 -m set --match-set WHITELIST src -j ACCEPT
 
-# ----- Server2  JAVA + BE -----
-# 25569 を日本からに制限
-iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25569 -m set --match-set WHITELIST src -j ACCEPT
-# 19140 を日本からに制限
-iptables -A INPUT -m state --state NEW -m udp -p udp --dport 19140 -m set --match-set WHITELIST src -j ACCEPT
+# # ----- Server2  JAVA + BE -----
+# # 25569 を日本からに制限
+# iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 25569 -m set --match-set WHITELIST src -j ACCEPT
+# # 19140 を日本からに制限
+# iptables -A INPUT -m state --state NEW -m udp -p udp --dport 19140 -m set --match-set WHITELIST src -j ACCEPT
 
 # +-----------------------+
 # |    nginx settings     |
